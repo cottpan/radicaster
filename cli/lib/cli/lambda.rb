@@ -13,6 +13,7 @@ module Radicaster
       def record_latest(def_)
         client.invoke(
           function_name: rec_radiko_arn,
+          invocation_type: 'Event',
           payload: %Q/{"id": "#{def_.id}"}/,
         )
       end

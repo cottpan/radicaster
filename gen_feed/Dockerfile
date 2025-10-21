@@ -1,12 +1,12 @@
-FROM amazon/aws-lambda-ruby:2.7 AS bundler
+FROM amazon/aws-lambda-ruby:3.3 AS bundler
 WORKDIR /var/task
-RUN yum groupinstall -y "Development Tools"
+RUN microdnf install -y gcc gcc-c++ make
 COPY ./Gemfile ./Gemfile
 COPY ./Gemfile.lock ./Gemfile.lock
-RUN bundle install --path=vendor/bundle
+RUN bundle config set --local path 'vendor/bundle' && bundle install
 
 
-FROM amazon/aws-lambda-ruby:2.7
+FROM amazon/aws-lambda-ruby:3.3
 WORKDIR /var/task
 
 ENV TZ=Asia/Tokyo

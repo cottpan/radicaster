@@ -5,11 +5,15 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby "~> 2.7.0"
+ruby "~> 3.3.0"
 
-gem "rake", "~> 12.0"
-gem "aws-sdk-s3"
-gem "rspec", "~> 3.0"
-gem "rspec-its"
-gem "rspec-parameterized"
-gem "rspec-mocks"
+gem "rake", "~> 13.0"
+gem "aws-sdk-s3", "~> 1.0"
+gem "rexml"
+
+group :development, :test do
+  gem "rspec", "~> 3.0"
+  gem "rspec-its"
+  gem "rspec-parameterized"
+  gem "rspec-mocks"
+end

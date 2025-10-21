@@ -35,6 +35,7 @@ module Radicaster::CLI
       it "invokes recording lambda" do
         expect(client).to receive(:invoke).with({
           function_name: "arn:aws:lambda:dummy",
+          invocation_type: 'Event',
           payload: '{"id": "test"}',
         })
         lambda.record_latest(def_)
