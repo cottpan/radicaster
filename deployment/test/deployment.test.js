@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const aws_cdk_lib_1 = require("aws-cdk-lib");
+const assertions_1 = require("aws-cdk-lib/assertions");
+const radicaster_stack_1 = require("../lib/radicaster-stack");
+test('RadicasterStack creates expected resources', () => {
+    // Set required environment variables for test
+    process.env.RADICASTER_S3_BUCKET = 'test-bucket';
+    process.env.RADICASTER_BASIC_AUTH_USER = 'testuser';
+    process.env.RADICASTER_BASIC_AUTH_PASSWORD = 'testpass';
+    const app = new aws_cdk_lib_1.App();
+    // WHEN - EdgeFunction requires explicit region
+    const stack = new radicaster_stack_1.RadicasterStack(app, 'MyTestStack', {
+        env: {
+            account: '123456789012',
+            region: 'us-east-1'
+        }
+    });
+    // THEN
+    const template = assertions_1.Template.fromStack(stack);
+    // Check that S3 bucket is created
+    template.resourceCountIs('AWS::S3::Bucket', 1);
+    // Check that Lambda functions are created
+    template.resourceCountIs('AWS::Lambda::Function', 4); // rec-radiko, gen-feed, basic-auth edge function, and edge function version
+    // Check that CloudFront distribution is created
+    template.resourceCountIs('AWS::CloudFront::Distribution', 1);
+});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGVwbG95bWVudC50ZXN0LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiZGVwbG95bWVudC50ZXN0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsNkNBQWtDO0FBQ2xDLHVEQUFrRDtBQUNsRCw4REFBMEQ7QUFFMUQsSUFBSSxDQUFDLDRDQUE0QyxFQUFFLEdBQUcsRUFBRTtJQUN0RCw4Q0FBOEM7SUFDOUMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxvQkFBb0IsR0FBRyxhQUFhLENBQUM7SUFDakQsT0FBTyxDQUFDLEdBQUcsQ0FBQywwQkFBMEIsR0FBRyxVQUFVLENBQUM7SUFDcEQsT0FBTyxDQUFDLEdBQUcsQ0FBQyw4QkFBOEIsR0FBRyxVQUFVLENBQUM7SUFFeEQsTUFBTSxHQUFHLEdBQUcsSUFBSSxpQkFBRyxFQUFFLENBQUM7SUFDdEIsK0NBQStDO0lBQy9DLE1BQU0sS0FBSyxHQUFHLElBQUksa0NBQWUsQ0FBQyxHQUFHLEVBQUUsYUFBYSxFQUFFO1FBQ3BELEdBQUcsRUFBRTtZQUNILE9BQU8sRUFBRSxjQUFjO1lBQ3ZCLE1BQU0sRUFBRSxXQUFXO1NBQ3BCO0tBQ0YsQ0FBQyxDQUFDO0lBQ0gsT0FBTztJQUNQLE1BQU0sUUFBUSxHQUFHLHFCQUFRLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQyxDQUFDO0lBQzNDLGtDQUFrQztJQUNsQyxRQUFRLENBQUMsZUFBZSxDQUFDLGlCQUFpQixFQUFFLENBQUMsQ0FBQyxDQUFDO0lBQy9DLDBDQUEwQztJQUMxQyxRQUFRLENBQUMsZUFBZSxDQUFDLHVCQUF1QixFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsNEVBQTRFO0lBQ2xJLGdEQUFnRDtJQUNoRCxRQUFRLENBQUMsZUFBZSxDQUFDLCtCQUErQixFQUFFLENBQUMsQ0FBQyxDQUFDO0FBQy9ELENBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQXBwIH0gZnJvbSAnYXdzLWNkay1saWInO1xuaW1wb3J0IHsgVGVtcGxhdGUgfSBmcm9tICdhd3MtY2RrLWxpYi9hc3NlcnRpb25zJztcbmltcG9ydCB7IFJhZGljYXN0ZXJTdGFjayB9IGZyb20gJy4uL2xpYi9yYWRpY2FzdGVyLXN0YWNrJztcblxudGVzdCgnUmFkaWNhc3RlclN0YWNrIGNyZWF0ZXMgZXhwZWN0ZWQgcmVzb3VyY2VzJywgKCkgPT4ge1xuICAvLyBTZXQgcmVxdWlyZWQgZW52aXJvbm1lbnQgdmFyaWFibGVzIGZvciB0ZXN0XG4gIHByb2Nlc3MuZW52LlJBRElDQVNURVJfUzNfQlVDS0VUID0gJ3Rlc3QtYnVja2V0JztcbiAgcHJvY2Vzcy5lbnYuUkFESUNBU1RFUl9CQVNJQ19BVVRIX1VTRVIgPSAndGVzdHVzZXInO1xuICBwcm9jZXNzLmVudi5SQURJQ0FTVEVSX0JBU0lDX0FVVEhfUEFTU1dPUkQgPSAndGVzdHBhc3MnO1xuICBcbiAgY29uc3QgYXBwID0gbmV3IEFwcCgpO1xuICAvLyBXSEVOIC0gRWRnZUZ1bmN0aW9uIHJlcXVpcmVzIGV4cGxpY2l0IHJlZ2lvblxuICBjb25zdCBzdGFjayA9IG5ldyBSYWRpY2FzdGVyU3RhY2soYXBwLCAnTXlUZXN0U3RhY2snLCB7XG4gICAgZW52OiB7XG4gICAgICBhY2NvdW50OiAnMTIzNDU2Nzg5MDEyJyxcbiAgICAgIHJlZ2lvbjogJ3VzLWVhc3QtMSdcbiAgICB9XG4gIH0pO1xuICAvLyBUSEVOXG4gIGNvbnN0IHRlbXBsYXRlID0gVGVtcGxhdGUuZnJvbVN0YWNrKHN0YWNrKTtcbiAgLy8gQ2hlY2sgdGhhdCBTMyBidWNrZXQgaXMgY3JlYXRlZFxuICB0ZW1wbGF0ZS5yZXNvdXJjZUNvdW50SXMoJ0FXUzo6UzM6OkJ1Y2tldCcsIDEpO1xuICAvLyBDaGVjayB0aGF0IExhbWJkYSBmdW5jdGlvbnMgYXJlIGNyZWF0ZWRcbiAgdGVtcGxhdGUucmVzb3VyY2VDb3VudElzKCdBV1M6OkxhbWJkYTo6RnVuY3Rpb24nLCA0KTsgLy8gcmVjLXJhZGlrbywgZ2VuLWZlZWQsIGJhc2ljLWF1dGggZWRnZSBmdW5jdGlvbiwgYW5kIGVkZ2UgZnVuY3Rpb24gdmVyc2lvblxuICAvLyBDaGVjayB0aGF0IENsb3VkRnJvbnQgZGlzdHJpYnV0aW9uIGlzIGNyZWF0ZWRcbiAgdGVtcGxhdGUucmVzb3VyY2VDb3VudElzKCdBV1M6OkNsb3VkRnJvbnQ6OkRpc3RyaWJ1dGlvbicsIDEpO1xufSk7XG4iXX0=

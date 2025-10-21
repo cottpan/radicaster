@@ -2,6 +2,9 @@ require "date"
 
 require "aws-sdk-s3"
 
+# Use bundled CA certificates to avoid SSL verification errors
+Aws.use_bundled_cert!
+
 module Radicaster
   module RecRadiko
     class RecCommand

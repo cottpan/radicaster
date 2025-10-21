@@ -4,6 +4,9 @@ require "pathname"
 require "aws-sdk-s3"
 require "yaml"
 
+# Use bundled CA certificates to avoid SSL verification errors
+Aws.use_bundled_cert!
+
 module Radicaster
   module GenFeed
     class GenerateFeedCommand
