@@ -4,6 +4,9 @@ require "aws-sdk-s3"
 require "aws-sdk-lambda"
 require "aws-sdk-eventbridge"
 
+# Use bundled CA certificates to avoid SSL verification errors
+Aws.use_bundled_cert!
+
 require "cli/handler"
 require "cli/definition"
 require "cli/eventbridge"

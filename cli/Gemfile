@@ -4,11 +4,12 @@ source "https://rubygems.org"
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-ruby "~> 2.7.0"
+ruby "~> 3.3.0"
 
-gem "aws-sdk-s3"
-gem "aws-sdk-eventbridge"
-gem "aws-sdk-lambda"
+gem "aws-sdk-s3", "~> 1.0"
+gem "aws-sdk-eventbridge", "~> 1.0"
+gem "aws-sdk-lambda", "~> 1.0"
+gem "rexml"
 
 group :development, :test do
   gem "rspec", "~> 3.0"
