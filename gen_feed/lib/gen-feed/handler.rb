@@ -47,9 +47,21 @@ module Radicaster
       end
 
       def exec(cmd)
-        logger.debug("Start exec. id: #{cmd}")
+        logger.debug("Start exec. id: #{cmd.id}")
         definition = storage.find_definition(cmd.id)
-        episodes = storage.list_episodes(cmd.id)
+        
+        # rss_program_limitが指定されている場合は、その数だけエピソードを取得
+        limit = definition.rss_program_limit
+        episodes = storage.list_episodes(cmd.id, limit: limit)
+        
+        logger.info("Found #{episodes.size} episodes for RSS feed")
+        
+        # rss_program_limitが指定されていて、古いファイルをアーカイブ
+        if limit && limit > 0
+          archived_count = storage.archive_old_episodes(cmd.id, limit)
+          logger.info("Archived #{archived_count} old episodes to GLACIER_IR storage class") if archived_count > 0
+        end
+        
         feed = generator.generate(definition, episodes)
         storage.save_feed(cmd.id, feed)
       end

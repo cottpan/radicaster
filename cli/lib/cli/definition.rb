@@ -12,6 +12,7 @@ module Radicaster
         :image,
         :program_schedule,
         :execution_schedule,
+        :rss_program_limit,
         :raw
       )
 
@@ -36,6 +37,7 @@ module Radicaster
           image: h[:image],
           program_schedule: program_schedule,
           execution_schedule: execution_schedule.map { |s| ExecutionSchedule.parse(s) },
+          rss_program_limit: h[:rss_program_limit],
         )
       end
 
@@ -47,7 +49,8 @@ module Radicaster
         author:,
         image:,
         program_schedule:,
-        execution_schedule:
+        execution_schedule:,
+        rss_program_limit: nil
       )
         @id = id
         @title = title
@@ -57,10 +60,11 @@ module Radicaster
         @image = image
         @program_schedule = program_schedule
         @execution_schedule = execution_schedule
+        @rss_program_limit = rss_program_limit
       end
 
       def to_yaml()
-        {
+        result = {
           "id" => id,
           "area" => area,
           "station" => station,
@@ -69,7 +73,9 @@ module Radicaster
           "image" => image,
           "program_schedule" => program_schedule,
           "execution_schedule" => execution_schedule.map(&:to_yaml),
-        }.to_yaml
+        }
+        result["rss_program_limit"] = rss_program_limit if rss_program_limit
+        result.to_yaml
       end
 
       def ==(other)
@@ -81,7 +87,8 @@ module Radicaster
           author == other.author &&
           image == other.image &&
           program_schedule == other.program_schedule &&
-          execution_schedule == other.execution_schedule
+          execution_schedule == other.execution_schedule &&
+          rss_program_limit == other.rss_program_limit
       end
     end
   end
