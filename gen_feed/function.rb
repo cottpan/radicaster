@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 $LOAD_PATH.unshift(File.dirname(__FILE__) + "/lib")
+
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
 
 require "logger"
 require "gen-feed"
