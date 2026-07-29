@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
-    <title><%= definition.title %></title>
-    <itunes:author><%= definition.author %></itunes:author>
-    <itunes:summary><%= definition.summary %></itunes:summary>
+    <title><%= escape.call(definition.title) %></title>
+    <itunes:author><%= escape.call(definition.author) %></itunes:author>
+    <itunes:summary><%= escape.call(definition.summary) %></itunes:summary>
     <% if definition.image %>
-    <itunes:image href="<%= definition.image %>"/>
+    <itunes:image href="<%= escape.call(definition.image) %>"/>
     <% end %>
     <% episodes.each do |ep| %>
     <item>
-      <title><%= ep.title %></title>
-      <itunes:author><%= definition.author %></itunes:author>
+      <title><%= escape.call(ep.title) %></title>
+      <itunes:author><%= escape.call(definition.author) %></itunes:author>
       <% if definition.image %>
-      <itunes:image href="<%= definition.image %>"/>
+      <itunes:image href="<%= escape.call(definition.image) %>"/>
       <% end %>
       <pubDate><%= ep.last_modified.rfc822 %></pubDate>
-      <enclosure url="<%= ep.url %>" length="<%= ep.size %>" type="audio/mp4; charset=binary"/>
+      <enclosure url="<%= escape.call(ep.url) %>" length="<%= ep.size %>" type="audio/mp4"/>
     </item>
     <% end %>
   </channel>

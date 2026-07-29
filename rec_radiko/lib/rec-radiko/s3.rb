@@ -14,7 +14,12 @@ module Radicaster
       def save_episode(episode)
         key = make_key(episode)
         open(episode.local_path) do |f|
-          client.put_object(bucket: bucket, key: key, body: f)
+          client.put_object(
+            bucket: bucket,
+            key: key,
+            body: f,
+            content_type: "audio/mp4",
+          )
         end
       end
 

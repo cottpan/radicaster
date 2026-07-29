@@ -52,51 +52,8 @@ module Radicaster
           bucket: bucket,
           key: key,
           body: feed_body,
+          content_type: "application/rss+xml; charset=utf-8",
         )
-      end
-
-      # 全てのエピソードを取得（limit無し）
-      def list_all_episodes(id)
-        prefix = id + "/"
-        resp = client.list_objects_v2(bucket: bucket, prefix: prefix)
-        resp
-          .contents
-          .filter { |c| EPISODE_EXTS.include?(Pathname.new(c.key).extname) }
-          .map { |c|
-          {
-            key: c.key,
-            url: build_public_url(c.key),
-            size: c.size,
-            last_modified: c.last_modified,
-            storage_class: c.storage_class,
-          }
-        }
-          .sort_by { |ep| ep[:last_modified] }
-          .reverse
-      end
-
-      # 上限を超えた古いエピソードをアーカイブストレージクラスに移行
-      def archive_old_episodes(id, limit)
-        all_episodes = list_all_episodes(id)
-        
-        # limitを超えるエピソードを取得
-        episodes_to_archive = all_episodes.drop(limit)
-        
-        episodes_to_archive.each do |ep|
-          # 既にGLACIERまたはDEEP_ARCHIVEの場合はスキップ
-          next if ["GLACIER", "DEEP_ARCHIVE"].include?(ep[:storage_class])
-          
-          # GLACIER_IRに移行（即座にアクセス可能な低コストストレージ）
-          client.copy_object(
-            bucket: bucket,
-            copy_source: "#{bucket}/#{ep[:key]}",
-            key: ep[:key],
-            storage_class: "GLACIER_IR",
-            metadata_directive: "COPY",
-          )
-        end
-        
-        episodes_to_archive.size
       end
 
       private

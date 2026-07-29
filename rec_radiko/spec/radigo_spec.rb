@@ -38,17 +38,28 @@ module Radicaster::RecRadiko
       let(:area) { "JP13" }
       let(:id) { "TEST" }
       let(:start_time) { Time.new(2020, 11, 22, 1, 0, 0, "+09:00") }
+      let(:url) { "https://radiko.jp/#!/ts/TEST/20201122010000" }
+      let(:output_template) { "/tmp/20201122010000-TEST.%(ext)s" }
+      let(:output_path) { "/tmp/20201122010000-TEST.m4a" }
 
       context "when credentials are not specified" do
         subject(:radiko) { Radigo.new(workdir) }
-        it "executes radigo without credentials" do
+        it "executes yt-dlp without credentials" do
           allow(radiko).to receive(:system)
+          allow(Dir).to receive(:glob).with("/tmp/20201122010000-TEST.*").and_return([output_path])
+          allow(File).to receive(:unlink).with(output_path)
+          allow(File).to receive(:exist?).with(output_path).and_return(true)
 
           ret = radiko.rec(area, id, start_time)
 
-          expect(ret).to eq("/tmp/20201122010000-TEST.aac")
-          expect(radiko).to have_received(:system).with("rm -f /tmp/20201122010000-TEST.aac").ordered
-          expect(radiko).to have_received(:system).with("env RADIGO_HOME=/tmp radigo rec -area=JP13 -id=TEST -s=20201122010000", exception: true).ordered
+          expect(ret).to eq(output_path)
+          expect(radiko).to have_received(:system).with(
+            "yt-dlp",
+            "--no-cache-dir",
+            "-o", output_template,
+            url,
+            exception: true,
+          ).ordered
         end
       end
 
@@ -56,14 +67,24 @@ module Radicaster::RecRadiko
         let(:email) { "test@radicaster.test" }
         let(:password) { "password" }
         subject(:radiko) { Radigo.new(workdir, email, password) }
-        it "executes radigo with credentials" do
+        it "executes yt-dlp with credentials" do
           allow(radiko).to receive(:system)
+          allow(Dir).to receive(:glob).with("/tmp/20201122010000-TEST.*").and_return([output_path])
+          allow(File).to receive(:unlink).with(output_path)
+          allow(File).to receive(:exist?).with(output_path).and_return(true)
 
           ret = radiko.rec(area, id, start_time)
 
-          expect(ret).to eq("/tmp/20201122010000-TEST.aac")
-          expect(radiko).to have_received(:system).with("rm -f /tmp/20201122010000-TEST.aac").ordered
-          expect(radiko).to have_received(:system).with("env RADIGO_HOME=/tmp RADIKO_MAIL=test@radicaster.test RADIKO_PASSWORD=password radigo rec -area=JP13 -id=TEST -s=20201122010000", exception: true).ordered
+          expect(ret).to eq(output_path)
+          expect(radiko).to have_received(:system).with(
+            "yt-dlp",
+            "--no-cache-dir",
+            "-o", output_template,
+            "-u", email,
+            "-p", password,
+            url,
+            exception: true,
+          ).ordered
         end
       end
     end
