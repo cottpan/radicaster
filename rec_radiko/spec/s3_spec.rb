@@ -48,6 +48,7 @@ module Radicaster::RecRadiko
         expect(client).to receive(:put_object).with(hash_including(
           bucket: bucket,
           key: "test/20210622.m4a",
+          content_type: "audio/mp4",
         ))
         s3.save_episode(episode)
       end

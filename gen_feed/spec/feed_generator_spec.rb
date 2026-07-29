@@ -3,7 +3,7 @@ module Radicaster::GenFeed
     subject(:generator) { FeedGenerator.new }
 
     describe "#generate" do
-      let(:definition) { Definition.new(title: "dummy title", author: "dummy author", summary: "dummy summary", image: "http://radicaster.test/dummy.png") }
+      let(:definition) { Definition.new(title: "dummy title", author: "dummy author", summary: "dummy summary", image: "http://radicaster.test/dummy.png?width=560&height=560") }
       let(:episodes) {
         [
           Episode.new(url: "http://radicaster.test/dummy/20210102.m4a", size: 100, last_modified: Time.utc(2021, 1, 2)),
@@ -21,27 +21,27 @@ module Radicaster::GenFeed
               <itunes:author>dummy author</itunes:author>
               <itunes:summary>dummy summary</itunes:summary>
               
-              <itunes:image href="http://radicaster.test/dummy.png"/>
+              <itunes:image href="http://radicaster.test/dummy.png?width=560&amp;height=560"/>
               
               
               <item>
                 <title>20210102.m4a</title>
                 <itunes:author>dummy author</itunes:author>
                 
-                <itunes:image href="http://radicaster.test/dummy.png"/>
+                <itunes:image href="http://radicaster.test/dummy.png?width=560&amp;height=560"/>
                 
                 <pubDate>Sat, 02 Jan 2021 00:00:00 -0000</pubDate>
-                <enclosure url="http://radicaster.test/dummy/20210102.m4a" length="100" type="audio/mp4; charset=binary"/>
+                <enclosure url="http://radicaster.test/dummy/20210102.m4a" length="100" type="audio/mp4"/>
               </item>
               
               <item>
                 <title>20210101.m4a</title>
                 <itunes:author>dummy author</itunes:author>
                 
-                <itunes:image href="http://radicaster.test/dummy.png"/>
+                <itunes:image href="http://radicaster.test/dummy.png?width=560&amp;height=560"/>
                 
                 <pubDate>Fri, 01 Jan 2021 00:00:00 -0000</pubDate>
-                <enclosure url="http://radicaster.test/dummy/20210101.m4a" length="100" type="audio/mp4; charset=binary"/>
+                <enclosure url="http://radicaster.test/dummy/20210101.m4a" length="100" type="audio/mp4"/>
               </item>
               
             </channel>

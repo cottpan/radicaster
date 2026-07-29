@@ -31,6 +31,9 @@ import {
   Runtime 
 } from 'aws-cdk-lib/aws-lambda';
 import { 
+  Platform 
+} from 'aws-cdk-lib/aws-ecr-assets';
+import { 
   S3EventSource 
 } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { 
@@ -95,7 +98,8 @@ export class RadicasterStack extends Stack {
 
     const funcRecRadiko = new DockerImageFunction(this, `func-rec-radiko`, {
       code: DockerImageCode.fromImageAsset(
-        "../rec_radiko"
+        "../rec_radiko",
+        { platform: Platform.LINUX_AMD64 },
       ),
       functionName: `radicaster-rec-radiko${params.suffix}`,
       timeout: Duration.minutes(10),
@@ -118,11 +122,14 @@ export class RadicasterStack extends Stack {
   }
 
   private setUpFuncGenFeed(bucket: Bucket, dist: Distribution, params: Params) {
-    const authPrefix = `${params.basicAuthUser}:${params.basicAuthPassword}@`
+    const authUser = encodeURIComponent(params.basicAuthUser);
+    const authPassword = encodeURIComponent(params.basicAuthPassword);
+    const authPrefix = `${authUser}:${authPassword}@`
     const domainName = params.customDomain || dist.domainName;
     const funcGenFeed = new DockerImageFunction(this, `func-gen-feed`, {
       code: DockerImageCode.fromImageAsset(
-        "../gen_feed"
+        "../gen_feed",
+        { platform: Platform.LINUX_AMD64 },
       ),
       functionName: `radicaster-gen-feed${params.suffix}`,
       timeout: Duration.minutes(1),
@@ -159,7 +166,7 @@ export class RadicasterStack extends Stack {
     const fn = new experimental.EdgeFunction(this, 'basic-auth-func', {
       code: Code.fromInline(code),
       handler: "index.handler",
-      runtime: Runtime.NODEJS_20_X,
+      runtime: Runtime.NODEJS_24_X,
       functionName: `radicaster-basic-auth${params.suffix}`,
       memorySize: 128,
     });

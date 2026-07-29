@@ -1,3 +1,4 @@
 *.env
 vendor/
 yaml/
+node_modules/
